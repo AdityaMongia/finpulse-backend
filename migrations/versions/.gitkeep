@@ -1,0 +1,10 @@
+# Alembic migration versions directory
+# =====================================
+# Migration files will be generated here by:
+#   alembic revision --autogenerate -m "description"
+#
+# Each generated file will be named:
+#   YYYYMMDD_HHMM_<revision_id>_<slug>.py
+#
+# Example:
+#   20240115_0930_a3f8e2c1d4b5_add_companies_table.py
