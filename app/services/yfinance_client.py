@@ -159,7 +159,7 @@ class YFinanceClient:
                 ticker,
                 period=period,
                 interval="1d",
-                auto_adjust=True,
+                auto_adjust=False,
                 progress=False,
             )
 

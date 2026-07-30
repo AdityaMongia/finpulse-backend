@@ -8,7 +8,8 @@ import asyncpg
 import random
 import datetime
 
-DB_DSN = "postgresql://finpulse:finpulse_secret@localhost:5434/finpulse_db"
+import os
+DB_DSN = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/finpulse_db").replace("postgresql+asyncpg://", "postgresql://")
 
 BASE_PRICES = {
     "RELIANCE.NS": 1485.50, "TCS.NS": 4105.00, "INFY.NS": 1892.00,

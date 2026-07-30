@@ -27,7 +27,8 @@ logging.basicConfig(
 logger = logging.getLogger("seed_api")
 
 API_BASE  = "http://localhost:8005/api/v1"
-DB_DSN    = "postgresql://finpulse:finpulse_secret@localhost:5434/finpulse_db"
+import os
+DB_DSN    = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/finpulse_db").replace("postgresql+asyncpg://", "postgresql://")
 
 # 20 NSE companies with static info (avoids .info rate limits for registration)
 COMPANIES = [

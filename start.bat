@@ -10,14 +10,7 @@ if exist venv\Scripts\activate.bat (
     call venv\Scripts\activate.bat
 )
 
-echo 📦 Starting PostgreSQL database in Docker...
-docker compose up -d
-if %ERRORLEVEL% NEQ 0 (
-    echo.
-    echo ❌ Docker failed to start! Make sure Docker Desktop is open and running.
-    pause
-    exit /b %ERRORLEVEL%
-)
+echo 📦 Ensure local PostgreSQL service is running on port 5432...
 
 echo ⚡ Running Database Migrations...
 alembic upgrade head

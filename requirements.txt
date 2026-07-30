@@ -24,7 +24,7 @@ apscheduler==3.10.4                # Background job scheduler
 httpx==0.27.0                      # Async HTTP client
 
 # --- Data & Finance ---
-yfinance==0.2.38                   # Yahoo Finance data fetcher (used in yfinance_client.py)
+yfinance>=1.5.2                   # Yahoo Finance data fetcher (used in yfinance_client.py)
 pandas==2.2.2                      # Data manipulation (used in yfinance_client.py)
 
 # --- Logging ---

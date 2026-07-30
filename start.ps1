@@ -21,15 +21,8 @@ if (Test-Path "venv\Scripts\Activate.ps1") {
     pip install -r requirements.txt
 }
 
-# 3. Start Database via Docker
-Write-Host "📦 Starting PostgreSQL database in Docker..." -ForegroundColor Cyan
-docker compose up -d
-
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "`n❌ Docker failed to start!" -ForegroundColor Red
-    Write-Host "👉 Please make sure Docker Desktop application is OPEN and RUNNING on your PC." -ForegroundColor Yellow
-    exit 1
-}
+# 3. Database Check
+Write-Host "📦 Ensure local PostgreSQL service is running on port 5432..." -ForegroundColor Cyan
 
 # 4. Run Migrations
 Write-Host "⚡ Running Database Migrations..." -ForegroundColor Cyan

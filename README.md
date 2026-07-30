@@ -49,7 +49,6 @@ finpulse-backend/
 ├── .env                     ← Local environment variables (not committed)
 ├── .env.example             ← Environment variable template
 ├── alembic.ini              ← Alembic config
-├── docker-compose.yml       ← PostgreSQL + app container setup
 └── requirements.txt         ← Python dependencies
 ```
 
@@ -57,7 +56,10 @@ finpulse-backend/
 
 ## Quickstart
 
-### 1. Clone & Setup Environment
+### 1. Prerequisites
+- Local PostgreSQL installed and running on `localhost:5432` with database `finpulse_db` created.
+
+### 2. Setup Environment & Install Dependencies
 ```bash
 cd finpulse-backend
 python -m venv venv
@@ -66,27 +68,27 @@ venv\Scripts\activate          # Windows
 pip install -r requirements.txt
 ```
 
-### 2. Configure Environment
+### 3. Configure Environment
 ```bash
 copy .env.example .env        # Windows
 # cp .env.example .env        # Linux/Mac
-# Edit .env with your values
+# Edit .env with your local PostgreSQL credentials if different
 ```
 
-### 3. Run Database Migrations
+### 4. Run Database Migrations
 ```bash
 alembic upgrade head
 ```
 
-### 4. Start the Server
+### 5. Start the Server
 ```bash
-uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8005
 ```
 
-### 5. View API Docs
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
-- Health: http://localhost:8000/health
+### 6. View API Docs
+- Swagger UI: http://localhost:8005/docs
+- ReDoc: http://localhost:8005/redoc
+- Health: http://localhost:8005/api/v1/health
 
 ---
 

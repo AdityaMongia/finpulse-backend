@@ -40,7 +40,7 @@ async def sync_company_history(session: AsyncSession, company_id: int, ticker: s
     loop = asyncio.get_event_loop()
     df = await loop.run_in_executor(
         None,
-        lambda: yf.download(ticker, period="1y", interval="1d", auto_adjust=True, progress=False)
+        lambda: yf.download(ticker, period="1y", interval="1d", auto_adjust=False, progress=False)
     )
 
     if df is None or df.empty:

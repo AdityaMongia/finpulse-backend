@@ -6,7 +6,7 @@ Complete guide and commands to run the **FinPulse** project (Backend + Frontend 
 
 ## 📋 Prerequisites
 
-1. **Docker Desktop** installed and running on your system.
+1. **Local PostgreSQL** installed and running on `localhost:5432` with a database named `finpulse_db`.
 2. **Node.js** (v18+) installed.
 3. **Python** (v3.10+) installed.
 
@@ -16,7 +16,7 @@ Complete guide and commands to run the **FinPulse** project (Backend + Frontend 
 
 | Service | Technology | Port | Command to Run |
 |---|---|---|---|
-| **Database** | PostgreSQL (Docker) | `5434` | `docker compose up -d` |
+| **Database** | Local PostgreSQL | `5432` | *(Runs as local system service)* |
 | **Backend API** | FastAPI + Uvicorn | `8005` | `uvicorn app.main:app --reload --host 0.0.0.0 --port 8005` |
 | **Frontend App** | React + Vite | `5173` | `npm run dev` |
 
@@ -32,22 +32,19 @@ Open a terminal window and navigate to `finpulse-backend`:
 cd finpulse-backend
 ```
 
-#### Step 1A: Start Database Container (Docker)
+#### Step 1A: Setup Virtual Environment & Dependencies
 ```powershell
-docker compose up -d
-```
-
-#### Step 1B: Activate Virtual Environment
-```powershell
+python -m venv venv
 .\venv\Scripts\activate
+pip install -r requirements.txt
 ```
 
-#### Step 1C: Run Database Migrations
+#### Step 1B: Run Database Migrations
 ```powershell
 alembic upgrade head
 ```
 
-#### Step 1D: Start Backend FastAPI Server
+#### Step 1C: Start Backend FastAPI Server
 ```powershell
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8005
 ```
@@ -96,15 +93,10 @@ Inside `finpulse-backend`, you can also run the automated startup script:
 start.bat
 ```
 
-*(This script automatically checks `.env`, starts Docker container, runs Alembic migrations, and launches Uvicorn on port 8005)*.
+*(This script automatically checks `.env`, activates venv, runs Alembic migrations, and launches Uvicorn on port 8005)*.
 
 ---
 
 ## 🛑 How to Stop Services
 
 - **Stop Servers**: Press `Ctrl + C` in the respective terminal windows.
-- **Stop Docker Database**:
-  ```powershell
-  cd finpulse-backend
-  docker compose down
-  ```

@@ -13,7 +13,7 @@ Usage:
     python scripts/seed_db.py
 
 Requirements:
-  - Backend database must be running (Docker PostgreSQL on port 5434)
+  - Backend database must be running (Local PostgreSQL on port 5432)
   - Alembic migrations must have been applied (python -m alembic upgrade head)
   - All pip packages must be installed (pip install -r requirements.txt)
 """

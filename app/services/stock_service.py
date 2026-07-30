@@ -320,16 +320,16 @@ class StockService:
 
     async def refresh_live_price(self, ticker: str, company_id: int) -> None:
         """
-        Fetch and persist current price + volume for one ticker.
+        Fetch and persist current price, volume, and all fundamental fields for one ticker.
         Called by `refresh_live_prices` scheduler job.
         """
         try:
-            data = await self.yf_client.get_live_price_and_volume(ticker)
+            data = await self.yf_client.get_current_quote(ticker)
             await self.market_data_repo.upsert(company_id=company_id, **data)
         except Exception as exc:
             # Log and skip — don't let one bad ticker crash the entire batch
             logger.warning(
-                "Failed to refresh live price for %s: %s", ticker, exc
+                "Failed to refresh live market data for %s: %s", ticker, exc
             )
 
     async def refresh_fundamentals(self, ticker: str, company_id: int) -> None:

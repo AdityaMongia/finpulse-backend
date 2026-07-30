@@ -2,7 +2,8 @@
 import asyncio
 import asyncpg
 
-DB_DSN = "postgresql://finpulse:finpulse_secret@localhost:5434/finpulse_db"
+import os
+DB_DSN = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/finpulse_db").replace("postgresql+asyncpg://", "postgresql://")
 
 # Approximate NSE data (July 2026) — will be overwritten when yfinance rate-limit resets
 MARKET_DATA = {

@@ -14,7 +14,7 @@ Usage:
 """
 
 from functools import lru_cache
-from typing import Literal
+from typing import Any, Literal
 
 from pydantic import AnyUrl, Field, PostgresDsn, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -56,12 +56,24 @@ class Settings(BaseSettings):
     # Format: postgresql+asyncpg://user:password@host:port/dbname
     # ------------------------------------------------------------------
     DATABASE_URL: str = Field(
-        default="postgresql+asyncpg://postgres:password@localhost:5432/finpulse_db",
+        default="postgresql+asyncpg://postgres:postgres@localhost:5432/finpulse_db",
         description="Async PostgreSQL connection URL",
     )
     DATABASE_POOL_SIZE: int = 5
     DATABASE_MAX_OVERFLOW: int = 10
     DATABASE_POOL_TIMEOUT: int = 30
+
+    @field_validator("DATABASE_URL", mode="before")
+    @classmethod
+    def assemble_db_url(cls, v: str | None) -> str:
+        if isinstance(v, str):
+            import re
+            if v.startswith("postgresql://"):
+                v = v.replace("postgresql://", "postgresql+asyncpg://", 1)
+            v = v.replace("sslmode=require", "ssl=require")
+            v = re.sub(r"[?&]channel_binding=[^&]+", "", v)
+            return v
+        return "postgresql+asyncpg://postgres:postgres@localhost:5432/finpulse_db"
 
     # ------------------------------------------------------------------
     # Security
@@ -90,7 +102,25 @@ class Settings(BaseSettings):
     CORS_ORIGINS: list[str] = [
         "http://localhost:3005",
         "http://localhost:5173",
+        "https://finpulse-frontend-main.vercel.app",
+        "https://finpulse-frontend.vercel.app",
+        "*",
     ]
+
+    @field_validator("CORS_ORIGINS", mode="before")
+    @classmethod
+    def assemble_cors_origins(cls, v: Any) -> list[str]:
+        if isinstance(v, str):
+            if v == "*":
+                return ["*"]
+            if v.startswith("["):
+                import json
+                try:
+                    return json.loads(v)
+                except Exception:
+                    pass
+            return [i.strip() for i in v.split(",") if i.strip()]
+        return v
 
     # ------------------------------------------------------------------
     # Derived / computed helpers
