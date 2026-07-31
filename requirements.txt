@@ -1,6 +1,6 @@
 # ==============================================================================
 # FinPulse Backend — Python Dependencies
-# Python 3.11+
+# Python 3.11+ (specify python-3.11.9 in runtime.txt for Render)
 # ==============================================================================
 
 # --- Web Framework ---
@@ -25,7 +25,7 @@ httpx==0.27.0                      # Async HTTP client
 
 # --- Data & Finance ---
 yfinance>=1.5.2                   # Yahoo Finance data fetcher (used in yfinance_client.py)
-pandas==2.2.2                      # Data manipulation (used in yfinance_client.py)
+pandas>=2.2.2                      # Data manipulation (use >= to allow compatible wheel install)
 
 # --- Logging ---
 python-json-logger==2.0.7         # JSON-structured log formatting
@@ -35,8 +35,8 @@ pytest==8.2.2
 pytest-asyncio==0.23.7
 # httpx already listed above — also used as async TestClient for FastAPI
 
-# --- Dev Tools ---
-black==24.4.2                      # Code formatter
-isort==5.13.2                      # Import sorter
-flake8==7.0.0                      # Linter
-mypy==1.10.0                       # Static type checker
+# --- Dev Tools (not needed in production, but kept for CI) ---
+# black==24.4.2
+# isort==5.13.2
+# flake8==7.0.0
+# mypy==1.10.0
