@@ -14,9 +14,13 @@ Responsibilities:
 - Define lifespan: startup & shutdown hooks
 """
 
+import asyncio
 import logging
 from contextlib import asynccontextmanager
+from datetime import datetime
 from typing import AsyncGenerator
+
+from zoneinfo import ZoneInfo
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -61,6 +65,31 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         scheduler = get_scheduler()
         scheduler.start()
         logger.info("APScheduler started")
+
+        # Auto-recover missed historical refresh job on startup.
+        # If the server starts after 4:30 PM IST, the cron job for that day
+        # was already missed (MemoryJobStore doesn't persist across restarts).
+        # We trigger it immediately in the background so today's data loads.
+        try:
+            ist = ZoneInfo("Asia/Kolkata")
+            now_ist = datetime.now(ist)
+            market_close_cutoff = now_ist.replace(hour=16, minute=30, second=0, microsecond=0)
+            if now_ist >= market_close_cutoff:
+                logger.info(
+                    "[Startup] Server started at %s IST (past 16:30) — "
+                    "triggering missed historical refresh job.",
+                    now_ist.strftime("%H:%M"),
+                )
+                from app.scheduler.jobs import refresh_historical
+                asyncio.create_task(refresh_historical())
+            else:
+                logger.info(
+                    "[Startup] Current time %s IST is before market close — "
+                    "no historical refresh needed yet.",
+                    now_ist.strftime("%H:%M"),
+                )
+        except Exception as exc:
+            logger.warning("[Startup] Could not auto-trigger historical refresh: %s", exc)
 
     logger.info("Application startup complete ✓")
 

@@ -15,7 +15,7 @@ Final URL structure:
 
 from fastapi import APIRouter
 
-from app.api.v1 import compare, historical, market_summary, search, stocks
+from app.api.v1 import admin, compare, historical, market_summary, search, stocks
 
 api_router = APIRouter()
 
@@ -43,4 +43,9 @@ api_router.include_router(
     search.router,
     prefix="/v1/search",
     tags=["Search"],
+)
+api_router.include_router(
+    admin.router,
+    prefix="/v1/admin",
+    tags=["Admin"],
 )
